@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+</head>
+<body>
+<div id="title">
+    <h1>Etch A Sketch</h1>
+</div>
+</div> 
+
+
+<!--controls-->
+
+
+<!-- Grid and container -->
+
+<div id = "main-container">
+
+<div id="left-hand-pane">
+    <div id="controls">
+        <div>
+            <p>Choose Grid Size</p>    
+            <input type = "range" id = "grid-picker" value = 1 min = 1 max = 100>
+            <p id = "grid-selector-display">1x1</p>    
+        </div>
+
+        <div>
+           <input type="color" id="color-picker">
+        </div>
+        
+        <div>
+            <button id="rainbow-button">Rainbow Mode</button>
+        </div>
+    </div>
+       
+</div>
+
+<div id="right-hand-pane">
+   
+<div id = "grid-container">
+    <div class="single-grid"></div>
+</div>
+</div>
+
+</div>
+
+
+<!--- JS link -->
+<script src="js/script.js"></script>
+</body>
+</html>
