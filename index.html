@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Michroma&display=swap" rel="stylesheet">
 
 </head>
 <body>
@@ -22,32 +25,46 @@
 <div id = "main-container">
 
 <div id="left-hand-pane">
+   
+        <div id = "grid-container">
+            <div class="single-grid"></div>
+        </div>
+        </div>
+        
+
+<div id="right-hand-pane">
     <div id="controls">
+     
+
         <div>
-            <p>Choose Grid Size</p>    
+            <label id = "label-color">
+           <input type="color" id="color-picker">
+        </label>
+        </div>
+        
+        <div>
+            <button id="rainbow-button" class="button type1">
+                <span class="btn-text">Rainbow</span>
+            </button>
+        </div>
+        <div>
+        <button id="prog-dark-button" class="button type1">
+            <span class="btn-text"></span>Progressive Dark: OFF</span>
+        </button>
+
+        <div> 
             <input type = "range" id = "grid-picker" value = 1 min = 1 max = 100>
             <p id = "grid-selector-display">1x1</p>    
         </div>
 
-        <div>
-           <input type="color" id="color-picker">
-        </div>
-        
-        <div>
-            <button id="rainbow-button">Rainbow Mode</button>
+    </div>
+
         </div>
     </div>
        
 </div>
 
-<div id="right-hand-pane">
-   
-<div id = "grid-container">
-    <div class="single-grid"></div>
-</div>
-</div>
 
-</div>
 
 
 <!--- JS link -->
