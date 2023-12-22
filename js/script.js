@@ -3,11 +3,11 @@ let gridContainer = document.getElementById("grid-container")
 let grids = document.getElementsByClassName("single-grid");
 let gridSelector = document.getElementById("grid-picker");
 let gridSelectorDisplay = document.getElementById("grid-selector-display");
-let rainbowBtn = document.getElementById("rainbow-button");
+let rainbowBtn = document.querySelector(".rainbow-button");
 let colorPicker = document.getElementById("color-picker");
 let progDarkBtn = document.getElementById("prog-dark-button");
 let presentColor;
-let labelElement = document.getElementById("label-color")
+let labelElement = document.getElementById("label-color");
 
 let labelColor = window.getComputedStyle(labelElement).backgroundColor;
 
@@ -29,11 +29,12 @@ colorPicker.addEventListener ("input", function() {
 })
 
 
+
 gridSelector.addEventListener("input", function() {
 
 // variables
 let gridSliderValue = event.target.value;
-let noOfGrids = gridSliderValue ** 2
+let noOfGrids = gridSliderValue ** 2;
 let noOfDivs = gridContainer.childElementCount;
 let gridsToCreate = noOfGrids - noOfDivs;
 let gridsToRemove = noOfDivs - noOfGrids;
@@ -53,18 +54,8 @@ gridContainer.style.gridTemplateRows = "repeat(" + gridSelector.value + ", 1fr)"
         gridContainer.removeChild(gridContainer.lastChild);
     }
 
-
-
-    for (grid of grids) {
-        grid.addEventListener("mouseover", function(e) {
-    if (rainbowBtn.classList.contains("active")) {
-        rainbowMode(e);
-    }  else {
-        e.target.style.backgroundColor = colorPicker.value;
-    }
-    }
-    )}
-
+addGridEventListeners();
+});  // END OF THIS FUNCTION
 
 //COLOR PICKER MODE
 colorPicker.addEventListener("click", colorPickerActivate);
@@ -80,8 +71,11 @@ function colorPickerActivate() {
     
 function colorPickerMode(e) {
         e.target.style.backgroundColor = colorPicker.value;
-    }
 
+        if (!progDarkBtn.classList.contains("active")) {
+            e.target.style.filter = "brightness(100%)";
+        }
+    }
 
 
 //RAINBOW MODE
@@ -92,7 +86,7 @@ rainbowBtn.addEventListener("click", function() {
 rainbowBtn.addEventListener("click", rainbowActivate);
 
 function rainbowActivate() {
-    rainbowBtn.classList.toggle("active");
+    rainbowBtn.classList.add("active");
 
     for (grid of grids) {
             grid.removeEventListener("mouseover", colorPickerMode);
@@ -100,54 +94,15 @@ function rainbowActivate() {
         }
 }
 
-
-//PROGRESSIVE DARK MODE
-progDarkBtn.addEventListener("click", progDarkActivate);    
-
-
-function progDarkActivate() {
-    progDarkBtn.classList.toggle("active");
-    
-    if (progDarkBtn.classList.contains("active")) {
-    progDarkBtn.textContent = "Progressive Dark: ON"
-    for (grid of grids) {
-        grid.addEventListener("mouseover", progDarkMode);
-    }
-    } else {
-        progDarkBtn.textContent = "Progressive Dark: OFF"
-    for (grid of grids) {
-        grid.removeEventListener("mouseover", progDarkMode);
-    }
-    }
-}
-
-
-});  // end of function
-
-
 rainbowBtn.addEventListener("click", function() {
-    rainbowBtn.classList.toggle("active");
+    rainbowBtn.classList.add("active");
 });
 
-progDarkBtn.addEventListener("click", function(e) {
-    progDarkBtn.classList.toggle("active");
-
-   
-    if (progDarkBtn.classList.contains("active")) {
-        progDarkBtn.textContent = "Progressive Dark: ON"
-        for (grid of grids) {
-            grid.addEventListener("mouseover", progDarkMode);
-        }
-        } else {
-            progDarkBtn.textContent = "Progressive Dark: OFF"
-        for (grid of grids) {
-            grid.removeEventListener("mouseover", progDarkMode);
-        }
-        }
-});    
 
 
 function rainbowMode(e) {
+if (!progDarkBtn.classList.contains("active")) {
+    e.target.style.filter = "brightness(100%)";    
     if (rainbowIndex === 0) {
         rainbowIndex++;
         e.target.style.backgroundColor = rainbowColors[0];
@@ -162,8 +117,60 @@ function rainbowMode(e) {
     rainbowIndex++;
     e.target.style.backgroundColor = nextColor;
     }
+} else {    
+    if (rainbowIndex === 0) {
+        rainbowIndex++;
+        e.target.style.backgroundColor = rainbowColors[0];
+    }
+    else if (rainbowIndex === rainbowColors.length) {
+        rainbowIndex = 0;
+        rainbowIndex++;
+        e.target.style.backgroundColor = rainbowColors[0]; 
+    }
+    else if (rainbowIndex > 0) {
+    nextColor = rainbowColors[rainbowIndex]
+    rainbowIndex++;
+    e.target.style.backgroundColor = nextColor;
+    }
+
+}
 }
 
+
+for (grid of grids) {
+    grid.addEventListener("mouseover", function(e) {
+        if (rainbowBtn.classList.contains("active")) {
+        rainbowMode(e);
+        } else if (progDarkBtn.classList.contains("active")) {
+        progDarkMode(e);
+        } else if (!progDarkBtn.classList.contains("active")) {
+        e.target.style.filter = "brightness(100%)";
+        } else {
+        e.target.style.backgroundColor = colorPicker.value;
+        }        
+    });
+}
+
+
+
+//PROGRESSIVE DARK MODE
+for (let grid of grids) {
+    progDarkBtn.addEventListener("click", toggleDarkMode)
+}
+
+function toggleDarkMode() {
+    if (progDarkBtn.classList.contains("active")) {
+        progDarkBtn.classList.remove("active");
+        progDarkBtn.textContent = "Progressive Dark: OFF";
+        for (let grid of grids) {
+        grid.removeEventListener("mouseover", progDarkMode);
+    }} else {
+        progDarkBtn.classList.add("active");
+        progDarkBtn.textContent = "Progressive Dark: ON";
+        for (let grid of grids) {
+        grid.addEventListener("mouseover", progDarkMode);
+    }}       
+    }
 
 function progDarkMode(e) {
     if (currentBrightness >= minBrightness) {
@@ -178,14 +185,21 @@ function progDarkMode(e) {
 }
 
 
-for (grid of grids) {
-    grid.addEventListener("mouseover", function(e) {
-if (rainbowBtn.classList.contains("active")) {
-    rainbowMode(e);
-} else {
-    e.target.style.backgroundColor = colorPicker.value;
-}
+function addGridEventListeners() {
+    for (let grid of grids) {
+        grid.addEventListener("mouseover", function(e) {
+            if (rainbowBtn.classList.contains("active")) {
+                rainbowMode(e);
+            } else if (progDarkBtn.classList.contains("active")) {
+                progDarkMode(e);
+            } else if (!progDarkBtn.classList.contains("active")) {
+                e.target.style.filter = "brightness(100%)";
+                e.target.style.backgroundColor = colorPicker.value;
+            } else {
+                e.target.style.backgroundColor = colorPicker.value;
+            }
+        });
     }
-    )}
+}
 
-
+colorPickerActivate();
