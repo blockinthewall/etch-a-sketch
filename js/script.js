@@ -28,8 +28,6 @@ colorPicker.addEventListener ("input", function() {
     labelElement.style.backgroundColor = colorPicker.value;
 })
 
-
-
 gridSelector.addEventListener("input", function() {
 
 // variables
@@ -65,7 +63,7 @@ colorPicker.addEventListener("click", colorPickerActivate);
     
         for (let grid of grids) {
             if (isTouchDevice()) {
-                grid.removeEventListener("mouseover", rainbowMode);
+                grid.removeEventListener("mouseover", colorPickerMode);
     
                 grid.addEventListener("touchstart", handleTouchStart);
                 grid.addEventListener("touchend", handleTouchEnd);
@@ -73,7 +71,7 @@ colorPicker.addEventListener("click", colorPickerActivate);
                 grid.removeEventListener("touchstart", handleTouchStart);
                 grid.removeEventListener("touchend", handleTouchEnd);
     
-                grid.addEventListener("mouseover", rainbowMode);
+                grid.addEventListener("mouseover", colorPickerMode);
             }
         }
     }
