@@ -60,22 +60,40 @@ addGridEventListeners();
 //COLOR PICKER MODE
 colorPicker.addEventListener("click", colorPickerActivate);
 
-function colorPickerActivate() {
+    function colorPickerActivate() {
         rainbowBtn.classList.remove("active");
     
-        for (grid of grids) {
+        for (let grid of grids) {
+            if (isTouchDevice()) {
                 grid.removeEventListener("mouseover", rainbowMode);
-                grid.addEventListener("mouseover", colorPickerMode);
+    
+                grid.addEventListener("touchstart", handleTouchStart);
+                grid.addEventListener("touchend", handleTouchEnd);
+            } else {
+                grid.removeEventListener("touchstart", handleTouchStart);
+                grid.removeEventListener("touchend", handleTouchEnd);
+    
+                grid.addEventListener("mouseover", rainbowMode);
             }
         }
-    
-function colorPickerMode(e) {
-        e.target.style.backgroundColor = colorPicker.value;
-
-        if (!progDarkBtn.classList.contains("active")) {
-            e.target.style.filter = "brightness(100%)";
-        }
     }
+
+function handleTouchStart(e) {
+    e.target.classList.add('hovered');
+}
+
+function handleTouchEnd(e) {
+    e.target.classList.remove('hovered');
+    handleGridEvent(e);
+}
+
+function colorPickerMode(e) {
+    e.target.style.backgroundColor = colorPicker.value;
+
+    if (!progDarkBtn.classList.contains("active")) {
+        e.target.style.filter = "brightness(100%)";
+    }
+}
 
 
 //RAINBOW MODE
@@ -99,58 +117,19 @@ rainbowBtn.addEventListener("click", function() {
 });
 
 
-
 function rainbowMode(e) {
-if (!progDarkBtn.classList.contains("active")) {
-    e.target.style.filter = "brightness(100%)";    
-    if (rainbowIndex === 0) {
-        rainbowIndex++;
-        e.target.style.backgroundColor = rainbowColors[0];
-    }
-    else if (rainbowIndex === rainbowColors.length) {
-        rainbowIndex = 0;
-        rainbowIndex++;
-        e.target.style.backgroundColor = rainbowColors[0]; 
-    }
-    else if (rainbowIndex > 0) {
-    nextColor = rainbowColors[rainbowIndex]
-    rainbowIndex++;
-    e.target.style.backgroundColor = nextColor;
-    }
-} else {    
-    if (rainbowIndex === 0) {
-        rainbowIndex++;
-        e.target.style.backgroundColor = rainbowColors[0];
-    }
-    else if (rainbowIndex === rainbowColors.length) {
-        rainbowIndex = 0;
-        rainbowIndex++;
-        e.target.style.backgroundColor = rainbowColors[0]; 
-    }
-    else if (rainbowIndex > 0) {
-    nextColor = rainbowColors[rainbowIndex]
-    rainbowIndex++;
-    e.target.style.backgroundColor = nextColor;
-    }
-
-}
-}
-
-
-for (grid of grids) {
-    grid.addEventListener("mouseover", function(e) {
-        if (rainbowBtn.classList.contains("active")) {
-        rainbowMode(e);
-        } else if (progDarkBtn.classList.contains("active")) {
-        progDarkMode(e);
-        } else if (!progDarkBtn.classList.contains("active")) {
+    if (!progDarkBtn.classList.contains("active")) {
         e.target.style.filter = "brightness(100%)";
-        } else {
-        e.target.style.backgroundColor = colorPicker.value;
-        }        
-    });
-}
 
+        if (isTouchDevice()) {
+            e.target.style.backgroundColor = rainbowColors[rainbowIndex];
+            rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
+        } else {
+            e.target.style.backgroundColor = rainbowColors[rainbowIndex];
+            rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
+        }
+    }
+}
 
 
 //PROGRESSIVE DARK MODE
@@ -163,43 +142,61 @@ function toggleDarkMode() {
         progDarkBtn.classList.remove("active");
         progDarkBtn.textContent = "Progressive Dark: OFF";
         for (let grid of grids) {
-        grid.removeEventListener("mouseover", progDarkMode);
-    }} else {
+            grid.removeEventListener("mouseover", progDarkMode);
+        }
+    } else {
         progDarkBtn.classList.add("active");
         progDarkBtn.textContent = "Progressive Dark: ON";
         for (let grid of grids) {
-        grid.addEventListener("mouseover", progDarkMode);
-    }}       
-    }
-
-function progDarkMode(e) {
-    if (currentBrightness >= minBrightness) {
-        currentBrightness -= 10;
-        console.log(`after: `, currentBrightness);
-        e.target.style.filter = `brightness(${currentBrightness}%)`;
-    } else {
-        // Reset brightness to 100% when it reaches the minimum
-        currentBrightness = 100;
-        e.target.style.filter = `brightness(${currentBrightness}%)`;
+            grid.addEventListener("mouseover", progDarkMode);
+        }
     }
 }
 
+    function progDarkMode(e) {
+        if (currentBrightness >= minBrightness) {
+            currentBrightness -= 10;
+            console.log(`after: `, currentBrightness);
+            e.target.style.filter = `brightness(${currentBrightness}%)`;
+        } else {
+            currentBrightness = 100;
+            e.target.style.filter = `brightness(${currentBrightness}%)`;
+        }
+    }
+    
 
-function addGridEventListeners() {
-    for (let grid of grids) {
-        grid.addEventListener("mouseover", function(e) {
-            if (rainbowBtn.classList.contains("active")) {
-                rainbowMode(e);
-            } else if (progDarkBtn.classList.contains("active")) {
-                progDarkMode(e);
-            } else if (!progDarkBtn.classList.contains("active")) {
-                e.target.style.filter = "brightness(100%)";
-                e.target.style.backgroundColor = colorPicker.value;
+    function addGridEventListeners() {
+        for (let grid of grids) {
+            if (isTouchDevice()) {
+                grid.addEventListener("touchstart", handleTouchStart);
+                grid.addEventListener("touchend", handleTouchEnd);
             } else {
-                e.target.style.backgroundColor = colorPicker.value;
+                grid.removeEventListener("touchstart", handleTouchStart);
+                grid.removeEventListener("touchend", handleTouchEnd);
+    
+                
+                grid.addEventListener("mouseover", function (e) {
+                    handleGridEvent(e);
+                });
             }
-        });
+        }
     }
-}
-
-colorPickerActivate();
+    
+    function handleGridEvent(e) {
+        if (rainbowBtn.classList.contains("active")) {
+            rainbowMode(e);
+        } else if (progDarkBtn.classList.contains("active")) {
+            progDarkMode(e);
+        } else if (!progDarkBtn.classList.contains("active")) {
+            e.target.style.filter = "brightness(100%)";
+            e.target.style.backgroundColor = colorPicker.value;
+        } else {
+            e.target.style.backgroundColor = colorPicker.value;
+        }
+    }
+    
+    function isTouchDevice() {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+    }
+    
+    colorPickerActivate();
