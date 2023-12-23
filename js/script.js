@@ -7,9 +7,6 @@ let rainbowBtn = document.querySelector(".rainbow-button");
 let colorPicker = document.getElementById("color-picker");
 let progDarkBtn = document.getElementById("prog-dark-button");
 let presentColor;
-let labelElement = document.getElementById("label-color");
-
-let labelColor = window.getComputedStyle(labelElement).backgroundColor;
 
 let rainbowColors = [
     "#FF0000", // Red
@@ -23,10 +20,6 @@ let rainbowColors = [
 let rainbowIndex = 0;
 let currentBrightness = 100;
 let minBrightness = 10;
-
-colorPicker.addEventListener ("input", function() {
-    labelElement.style.backgroundColor = colorPicker.value;
-})
 
 gridSelector.addEventListener("input", function() {
 

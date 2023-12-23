@@ -17,24 +17,32 @@ border-radius: 0px;
 border: 1px solid #dbdbdb;
 }
 
-#color-picker {
-    visibility: hidden;
-  }
-
 #grid-text {
     margin-top: 10%;
     margin-bottom: 0; !important
 }
+
   
-#label-color {
-    display: inline-block;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    background-color: black;
-    height: 50px;
-    width: 50px;
-    border-radius: 50px;
-    position: relative;
+.color-input-wrapper {
+  height: 3em;
+  width: 3em;
+  overflow: hidden;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+}
+.color-input-wrapper  input[type=color] {
+    position: absolute;
+    height: 8em;
+    width: 8em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    border: none;
+    margin: 0;
+    padding: 0;
   }
 
 #grid-selector-display {
@@ -140,6 +148,14 @@ margin: 0;
     transform: scale(100) translateX(2px);
   }
 
+.type1.active::after {
+  visibility: visible;
+  transform: scale(100) translateX(2px);
+}
+
+.button.active {
+  color: #fff;
+}
 
 #grid-container {
     display: grid;
