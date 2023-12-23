@@ -111,16 +111,11 @@ rainbowBtn.addEventListener("click", function() {
 function rainbowMode(e) {
     if (!progDarkBtn.classList.contains("active")) {
         e.target.style.filter = "brightness(100%)";
-
-        if (isTouchDevice()) {
-            e.target.style.backgroundColor = rainbowColors[rainbowIndex];
-            rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
-        } else {
+    }
             e.target.style.backgroundColor = rainbowColors[rainbowIndex];
             rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
         }
-    }
-}
+    
 
 
 //PROGRESSIVE DARK MODE
@@ -172,6 +167,7 @@ function toggleDarkMode() {
             }
         }
     }
+
     
     function handleGridEvent(e) {
         if (rainbowBtn.classList.contains("active")) {
