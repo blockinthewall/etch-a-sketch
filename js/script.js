@@ -88,10 +88,6 @@ function colorPickerMode(e) {
 
 
 //RAINBOW MODE
-rainbowBtn.addEventListener("click", function() {
-    rainbowBtn.classList.add("active");
-});
-
 rainbowBtn.addEventListener("click", rainbowActivate);
 
 function rainbowActivate() {
