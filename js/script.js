@@ -49,25 +49,16 @@ addGridEventListeners();
 });  // END OF THIS FUNCTION
 
 //COLOR PICKER MODE
-colorPicker.addEventListener("click", colorPickerActivate);
-
-    function colorPickerActivate() {
-        rainbowBtn.classList.remove("active");
+colorPicker.addEventListener("click", function() {
+    colorPicker.classList.add("active");
+    rainbowBtn.classList.remove("active");
     
-        for (let grid of grids) {
-            if (isTouchDevice()) {
-                grid.removeEventListener("mouseover", colorPickerMode);
-    
-                grid.addEventListener("touchstart", handleTouchStart);
-                grid.addEventListener("touchend", handleTouchEnd);
-            } else {
-                grid.removeEventListener("touchstart", handleTouchStart);
-                grid.removeEventListener("touchend", handleTouchEnd);
-    
-                grid.addEventListener("mouseover", colorPickerMode);
-            }
-        }
-    }
+    /* for (grid of grids) {
+    grid.removeEventListener("mouseover", rainbowMode);
+    grid.addEventListener("mouseover", colorPickerMode )
+    } */
+});
+        
 
 function handleTouchStart(e) {
     e.target.classList.add('hovered');
@@ -88,52 +79,43 @@ function colorPickerMode(e) {
 
 
 //RAINBOW MODE
-rainbowBtn.addEventListener("click", rainbowActivate);
-
-function rainbowActivate() {
-    rainbowBtn.classList.add("active");
-
-    for (grid of grids) {
-            grid.removeEventListener("mouseover", colorPickerMode);
-            grid.addEventListener("mouseover", rainbowMode);
-        }
-}
-
-rainbowBtn.addEventListener("click", function() {
-    rainbowBtn.classList.add("active");
+rainbowBtn.addEventListener("click", function(){
+  rainbowBtn.classList.add("active");
+  colorPicker.classList.remove("active");
+/*
+  for (grid of grids) {
+    grid.removeEventListener("mouseover", colorPickerMode);
+    grid.addEventListener("mouseover", rainbowMode);
+  } */
 });
-
 
 function rainbowMode(e) {
     if (!progDarkBtn.classList.contains("active")) {
         e.target.style.filter = "brightness(100%)";
     }
-            e.target.style.backgroundColor = rainbowColors[rainbowIndex];
-            rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
-        }
+    e.target.style.backgroundColor = rainbowColors[rainbowIndex];
+    rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
+}
     
+   
 
 
 //PROGRESSIVE DARK MODE
-for (let grid of grids) {
-    progDarkBtn.addEventListener("click", toggleDarkMode)
-}
-
-function toggleDarkMode() {
+    progDarkBtn.addEventListener("click", function() { 
     if (progDarkBtn.classList.contains("active")) {
         progDarkBtn.classList.remove("active");
         progDarkBtn.textContent = "Progressive Dark: OFF";
-        for (let grid of grids) {
+        /* for (let grid of grids) {
             grid.removeEventListener("mouseover", progDarkMode);
-        }
+        } */
     } else {
         progDarkBtn.classList.add("active");
         progDarkBtn.textContent = "Progressive Dark: ON";
-        for (let grid of grids) {
+        /* for (let grid of grids) {
             grid.addEventListener("mouseover", progDarkMode);
-        }
+        } */
     }
-}
+});
 
     function progDarkMode(e) {
         if (currentBrightness >= minBrightness) {
@@ -148,38 +130,37 @@ function toggleDarkMode() {
     
 
     function addGridEventListeners() {
-        for (let grid of grids) {
+        for (grid of grids) {
             if (isTouchDevice()) {
                 grid.addEventListener("touchstart", handleTouchStart);
                 grid.addEventListener("touchend", handleTouchEnd);
             } else {
                 grid.removeEventListener("touchstart", handleTouchStart);
                 grid.removeEventListener("touchend", handleTouchEnd);
-    
-                
-                grid.addEventListener("mouseover", function (e) {
-                    handleGridEvent(e);
-                });
+                grid.addEventListener("mouseover", handleGridEvent);
             }
         }
     }
 
     
     function handleGridEvent(e) {
-        if (rainbowBtn.classList.contains("active")) {
-            rainbowMode(e);
-        } else if (progDarkBtn.classList.contains("active")) {
+        if (colorPicker.classList.contains("active") && progDarkBtn.classList.contains("active") ) {
+            colorPickerMode(e);
             progDarkMode(e);
-        } else if (!progDarkBtn.classList.contains("active")) {
-            e.target.style.filter = "brightness(100%)";
-            e.target.style.backgroundColor = colorPicker.value;
+        } else if (rainbowBtn.classList.contains("active") && progDarkBtn.classList.contains("active")) {
+            rainbowMode(e);
+            progDarkMode(e);
+        } else if (rainbowBtn.classList.contains("active")) {
+            rainbowMode(e);
         } else {
             e.target.style.backgroundColor = colorPicker.value;
         }
     }
-    
+
+
     function isTouchDevice() {
         return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
     }
-    
-    colorPickerActivate();
+
+
+    addGridEventListeners();
